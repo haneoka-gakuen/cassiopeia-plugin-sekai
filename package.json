@@ -1,0 +1,77 @@
+{
+  "name": "@haneoka/cassiopeia-plugin-sekai",
+  "version": "0.1.0",
+  "description": "Project Sekai SUS converter and display-only Cassiopeia provider",
+  "type": "module",
+  "license": "MPL-2.0",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "README.md",
+    "examples"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "import": "./dist/browser.js"
+    },
+    "./package.json": "./package.json",
+    "./convert": {
+      "types": "./dist/convert.d.ts",
+      "import": "./dist/convert.js"
+    },
+    "./session": {
+      "types": "./dist/session.d.ts",
+      "import": "./dist/session.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json",
+    "example": "node scripts/build-example.mjs",
+    "prepack": "npm run build",
+    "check": "npm run typecheck && npm run build"
+  },
+  "peerDependencies": {
+    "@haneoka/cassiopeia": "^0.1.0",
+    "@haneoka/cassiopeia-host-web": "^0.1.0",
+    "@haneoka/embed-core": "^0.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@haneoka/cassiopeia-host-web": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3",
+    "esbuild": "0.21.5",
+    "@material/web": "2.5.0",
+    "@fontsource-variable/roboto": "5.2.10",
+    "@haneoka/design-tokens": "^0.1.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haneoka-gakuen/cassiopeia-plugin-sekai.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "homepage": "https://github.com/haneoka-gakuen/cassiopeia-plugin-sekai#readme",
+  "bugs": {
+    "url": "https://github.com/haneoka-gakuen/cassiopeia-plugin-sekai/issues"
+  },
+  "packageManager": "pnpm@11.14.0"
+}

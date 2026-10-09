@@ -1,0 +1,19 @@
+@import "@haneoka/design-tokens/tokens.css";
+@import "@haneoka/design-tokens/schemes.css";
+@font-face { font-family: "Roboto Variable"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("@fontsource-variable/roboto/files/roboto-latin-standard-normal.woff2") format("woff2"); }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); font: 16px "Roboto Variable", sans-serif; }
+main { max-width: 760px; margin: auto; padding: 16px; }
+header { display: flex; align-items: center; gap: 12px; justify-content: space-between; flex-wrap: wrap; }
+h1 { font-size: 20px; margin: 0; }
+md-outlined-select { width: 170px; }
+.files, .playback { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-block: 12px; }
+[hidden] { display: none !important; }
+#status { min-height: 24px; overflow-wrap: anywhere; }
+#stage { width: 100%; height: min(58dvh, 580px); min-height: 220px; border-radius: var(--md-sys-shape-corner-medium, 12px); overflow: hidden; position: relative; background: var(--md-sys-color-surface-container); }
+md-slider { width: 100%; }
+label { display: block; margin-block-start: 8px; }
+output { margin-inline-start: auto; font-variant-numeric: tabular-nums; }
+footer { margin-block-start: 16px; font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; }
+a { color: var(--md-sys-color-primary); }

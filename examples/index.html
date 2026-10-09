@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sekai · Cassiopeia</title>
+<link rel="stylesheet" href="./demo.css">
+<main>
+  <header><h1>Sekai · Cassiopeia</h1><md-outlined-select id="language" aria-label="Language"></md-outlined-select></header>
+  <section class="files">
+    <md-outlined-button id="chart-file"></md-outlined-button><input type="file" id="sus" accept=".sus,.txt,text/plain" hidden>
+    <md-outlined-button id="audio-file"></md-outlined-button><input type="file" id="audio" accept="audio/*" hidden>
+    <md-filled-button id="sample"></md-filled-button>
+  </section>
+  <md-linear-progress id="progress" hidden indeterminate aria-label="Loading"></md-linear-progress>
+  <p id="status" role="status" aria-live="polite"></p>
+  <div id="stage"></div>
+  <section class="playback">
+    <md-filled-button id="play" disabled></md-filled-button><md-outlined-button id="pause" disabled></md-outlined-button>
+    <md-outlined-button id="dispose" disabled></md-outlined-button>
+    <output id="time">0:00</output>
+  </section>
+  <label id="seek-label" for="seek"></label><md-slider id="seek" min="0" max="120" step="0.01" value="0" disabled></md-slider>
+  <label id="rate-label" for="rate"></label><md-slider id="rate" min="0.25" max="4" step="0.25" value="1"></md-slider>
+  <label id="scroll-label" for="scroll"></label><md-slider id="scroll" min="100" max="4000" step="100" value="1800"></md-slider>
+  <footer><a href="https://haneoka.org/">Haneoka</a> · <a id="chart-source" rel="noopener" target="_blank">SUS</a> · <a id="audio-source" rel="noopener" target="_blank">Audio</a> · kz (livetune) / Hatsune Miku · © SEGA / © Colorful Palette / © Crypton Future Media</footer>
+</main>
+<script type="module" src="./demo.js"></script>
+</html>

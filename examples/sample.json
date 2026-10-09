@@ -1,0 +1,11 @@
+{
+  "musicId": 1,
+  "title": "Tell Your World",
+  "difficulty": "append",
+  "sus": "https://storage.sekai.best/sekai-jp-assets/music/music_score/0001_01/append.txt",
+  "audio": "https://storage.sekai.best/sekai-jp-assets/music/long/0001_01/0001_01.mp3",
+  "susSha256": "d152fca23c44f6fecadbc4b4e6777be33a459cb94149c516eeced452707eaeb8",
+  "audioSha256": "f9e6a3d640725ff69e41c28503c9d2e7c6f8594d9827103e4a69e95157567a03",
+  "fillerSec": 9,
+  "note": "Original padded audio; use SUS WAVEOFFSET, keep fillerSec as metadata. Charts/music remain property of their owners."
+}
