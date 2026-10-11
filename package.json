@@ -36,7 +36,9 @@
     "typecheck": "tsc -p tsconfig.json",
     "example": "node scripts/build-example.mjs",
     "prepack": "npm run build",
-    "check": "npm run typecheck && npm run build"
+    "check": "npm run typecheck && npm run build",
+    "format": "prettier --write . --ignore-unknown",
+    "format:check": "prettier --check . --ignore-unknown"
   },
   "peerDependencies": {
     "@haneoka/cassiopeia": "^0.1.0",
@@ -53,7 +55,8 @@
     "esbuild": "0.21.5",
     "@material/web": "2.5.0",
     "@fontsource-variable/roboto": "5.2.10",
-    "@haneoka/design-tokens": "^0.1.0"
+    "@haneoka/design-tokens": "^0.1.0",
+    "prettier": "3.7.4"
   },
   "engines": {
     "node": ">=20"
@@ -73,5 +76,12 @@
   "bugs": {
     "url": "https://github.com/haneoka-gakuen/cassiopeia-plugin-sekai/issues"
   },
-  "packageManager": "pnpm@11.14.0"
+  "packageManager": "pnpm@11.14.0",
+  "keywords": [
+    "cassiopeia",
+    "rhythm-game",
+    "project-sekai",
+    "sus",
+    "chart-viewer"
+  ]
 }

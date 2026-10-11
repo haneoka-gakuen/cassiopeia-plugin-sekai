@@ -11,7 +11,10 @@ export function createSekaiPlugin() {
   return defineCassiopeiaPlugin({
     manifest: { id: "cassiopeia.sekai", version: "0.1.0", apiVersion: 1, provides: [SEKAI_DISPLAY.id] },
     setup(context) {
-      context.provide(SEKAI_DISPLAY, { convert: convertSekaiSus, createSession: (chart) => new SekaiPreviewSession(chart) });
+      context.provide(SEKAI_DISPLAY, {
+        convert: convertSekaiSus,
+        createSession: (chart) => new SekaiPreviewSession(chart),
+      });
     },
   });
 }
