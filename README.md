@@ -1,6 +1,6 @@
 # Cassiopeia Sekai adapter
 
-`@haneoka/cassiopeia-plugin-sekai` converts Project Sekai SUS input into a typed display document and provides a display-only session through the Cassiopeia plugin registry. It preserves source note kinds, lines, easing and critical flags. Playback preview uses a caller-owned audio URL and media clock; it does not implement game scoring or judgement.
+`@haneoka/cassiopeia-plugin-sekai` converts Project Sekai SUS input into a typed display document and provides a display-only session through the Cassiopeia plugin registry. It preserves source note kinds, lines, easing and critical flags. The converted chart is a complete Cassiopeia chart document: every note carries the kernel's operation and judgement type, so a kernel session can auto-play or judge it and any Cassiopeia renderer can draw it. The bundled preview is a light vector view with a caller-owned audio URL and media clock; it does no scoring of its own.
 
 ## Install and build
 

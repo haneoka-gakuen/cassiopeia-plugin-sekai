@@ -2,6 +2,7 @@ import {
   JudgementAreaOffsetType,
   NoteDirection,
   NoteJudgementType,
+  NoteLineEaseType,
   NoteOperateType,
   PPQ,
   VisualTimeMap,
@@ -21,6 +22,87 @@ interface Row {
 const numeric = (text: string) => Number(text);
 const positive = (text: string) => Number.isFinite(numeric(text)) && numeric(text) > 0;
 const unquote = (text: string) => text.replace(/^"|"$/gu, "");
+
+const LINE_EASE = { linear: NoteLineEaseType.Linear, in: NoteLineEaseType.EaseIn, out: NoteLineEaseType.EaseOut };
+/** Shape-only nodes and guide ends take no input. */
+const UNJUDGED = new Set([NoteOperateType.Hidden, NoteOperateType.GuideBegin, NoteOperateType.GuideEnd]);
+const UNDRAWN = new Set([...UNJUDGED, NoteOperateType.Combo]);
+
+/** The kernel's operation for a Sekai note, so any Cassiopeia renderer and session can play it. */
+function sekaiOperation(
+  kind: SekaiNote["sekai"]["kind"],
+  active: boolean,
+  value: { trace?: boolean; direction?: string; type?: string },
+): NoteOperateType {
+  switch (kind) {
+    case "tap":
+      return NoteOperateType.Normal;
+    case "flick":
+      return NoteOperateType.Flick;
+    case "trace":
+      return NoteOperateType.Trace;
+    case "slide-start":
+      if (!active) return NoteOperateType.GuideBegin;
+      return value.trace ? NoteOperateType.SlideBeginTrace : NoteOperateType.SlideBegin;
+    case "slide-end":
+      if (!active) return NoteOperateType.GuideEnd;
+      if (value.direction) return NoteOperateType.SlideEndFlick;
+      return value.trace ? NoteOperateType.SlideEndTrace : NoteOperateType.SlideEnd;
+    case "slide-tick":
+    case "attach":
+      if (!active) return NoteOperateType.Hidden;
+      return value.trace ? NoteOperateType.SlideConnectionTrace : NoteOperateType.SlideConnection;
+    default:
+      // USC "hidden" is the unseen combo tick; "ignore" only bends the path.
+      return active && value.type === "hidden" ? NoteOperateType.Combo : NoteOperateType.Hidden;
+  }
+}
+function judgementType(operation: NoteOperateType, critical: boolean): NoteJudgementType {
+  switch (operation) {
+    case NoteOperateType.Normal:
+      return critical ? NoteJudgementType.EasyNormal : NoteJudgementType.Normal;
+    case NoteOperateType.SlideBegin:
+      return critical ? NoteJudgementType.SlideBeginEasy : NoteJudgementType.SlideBegin;
+    case NoteOperateType.SlideEnd:
+      return NoteJudgementType.SlideEnd;
+    case NoteOperateType.SlideEndTrace:
+      return NoteJudgementType.SlideEndTrace;
+    case NoteOperateType.Flick:
+    case NoteOperateType.SlideEndFlick:
+      return NoteJudgementType.Flick;
+    case NoteOperateType.Trace:
+    case NoteOperateType.SlideBeginTrace:
+    case NoteOperateType.SlideConnection:
+    case NoteOperateType.SlideConnectionTrace:
+    case NoteOperateType.Combo:
+      return NoteJudgementType.Trace;
+    default:
+      return NoteJudgementType.None;
+  }
+}
+function judgementArea(operation: NoteOperateType, critical: boolean): JudgementAreaOffsetType {
+  switch (operation) {
+    case NoteOperateType.Normal:
+      return critical ? JudgementAreaOffsetType.EasyDefault : JudgementAreaOffsetType.Default;
+    case NoteOperateType.SlideBegin:
+      return critical ? JudgementAreaOffsetType.EasySlideBegin : JudgementAreaOffsetType.SlideBegin;
+    case NoteOperateType.SlideConnection:
+    case NoteOperateType.Combo:
+      return JudgementAreaOffsetType.Slide;
+    case NoteOperateType.SlideEnd:
+      return JudgementAreaOffsetType.SlideEnd;
+    case NoteOperateType.Flick:
+    case NoteOperateType.SlideEndFlick:
+      return JudgementAreaOffsetType.Flick;
+    case NoteOperateType.Trace:
+    case NoteOperateType.SlideBeginTrace:
+    case NoteOperateType.SlideEndTrace:
+    case NoteOperateType.SlideConnectionTrace:
+      return JudgementAreaOffsetType.Trace;
+    default:
+      return JudgementAreaOffsetType.Default;
+  }
+}
 
 /** Strictly validate gameplay channels before the upstream parser can skip them. */
 export function inspectSekaiSus(source: string): {
@@ -204,12 +286,15 @@ export function convertSekaiSus(sourceSus: string, options: SekaiConvertOptions 
       trace?: boolean;
       direction?: "left" | "up" | "right";
       ease?: "in" | "out" | "linear";
+      type?: string;
     },
     kind: SekaiNote["sekai"]["kind"],
     active: boolean,
     objectIndex: number,
     connectionIndex?: number,
   ): SekaiNote => {
+    const critical = value.critical ?? false;
+    const operation = sekaiOperation(kind, active, value);
     const pos = (value.lane - value.size + 6) * 2;
     const size = value.size * 4;
     const note: SekaiNote = {
@@ -221,30 +306,23 @@ export function convertSekaiSus(sourceSus: string, options: SekaiConvertOptions 
       size,
       laneX: value.lane / 6,
       width: value.size / 3,
-      operateType:
-        kind === "hidden"
-          ? NoteOperateType.Hidden
-          : value.direction
-            ? NoteOperateType.Flick
-            : value.trace
-              ? NoteOperateType.Trace
-              : NoteOperateType.Normal,
-      judgementType: NoteJudgementType.None,
-      judgementAreaOffsetType: JudgementAreaOffsetType.Default,
+      operateType: operation,
+      judgementType: judgementType(operation, critical),
+      judgementAreaOffsetType: judgementArea(operation, critical),
       direction:
         value.direction === "left"
           ? NoteDirection.Left
           : value.direction === "right"
             ? NoteDirection.Right
             : NoteDirection.Normal,
-      critical: value.critical ?? false,
-      judged: false,
-      visible: kind !== "hidden" && kind !== "attach",
+      critical,
+      judged: !UNJUDGED.has(operation),
+      visible: !UNDRAWN.has(operation),
       lineIds: [],
-      slideAlong: kind === "attach",
+      slideAlong: kind === "attach" || operation === NoteOperateType.Combo,
       indexInLine: connectionIndex ?? null,
-      easeL: null,
-      easeR: null,
+      easeL: connectionIndex === undefined ? null : LINE_EASE[value.ease ?? "linear"],
+      easeR: connectionIndex === undefined ? null : LINE_EASE[value.ease ?? "linear"],
       sekai: {
         kind,
         active,
