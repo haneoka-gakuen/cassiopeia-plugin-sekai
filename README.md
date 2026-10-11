@@ -12,12 +12,6 @@ npm run check
 npm pack --dry-run
 ```
 
-Before registry publication, install the prepared local tarballs instead:
-
-```sh
-npm install /path/to/haneoka-cassiopeia-0.1.0.tgz /path/to/haneoka-cassiopeia-plugin-sekai-0.1.0.tgz
-```
-
 The `@haneoka/embed-core` peer supplies `sekaiDataSource` and the browser loader. The optional `@haneoka/cassiopeia-host-web` peer supplies the browser audio clock. Supply the browser clock peer as well when using the `/browser` entry or the data-source adapter. The core converter and display session require no Our Notes game adapter.
 
 ## Convert caller-owned SUS
