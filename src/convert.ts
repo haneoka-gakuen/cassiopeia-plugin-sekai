@@ -23,7 +23,7 @@ const numeric = (text: string) => Number(text);
 const positive = (text: string) => Number.isFinite(numeric(text)) && numeric(text) > 0;
 const unquote = (text: string) => text.replace(/^"|"$/gu, "");
 
-const LINE_EASE = { linear: NoteLineEaseType.Linear, in: NoteLineEaseType.EaseIn, out: NoteLineEaseType.EaseOut };
+const LINE_EASE = { linear: NoteLineEaseType.Linear, in: NoteLineEaseType.EaseOut, out: NoteLineEaseType.EaseIn };
 /** Shape-only nodes and guide ends take no input. */
 const UNJUDGED = new Set([NoteOperateType.Hidden, NoteOperateType.GuideBegin, NoteOperateType.GuideEnd]);
 const UNDRAWN = new Set([...UNJUDGED, NoteOperateType.Combo]);
