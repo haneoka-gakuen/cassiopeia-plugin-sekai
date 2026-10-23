@@ -30,6 +30,12 @@ runtime.dispose();
 
 Read the exported `SekaiDocument`, `SekaiChart`, `SekaiNote` and `SekaiIssue` types for the full contract. Unsupported or malformed source data is reported through conversion issues or `SekaiFormatError`; preserve those diagnostics in an authoring host.
 
+Active slides also generate hidden Combo judgements on each half-beat between
+path anchors. Intermediate visible ticks retain their separate judgement, even
+when they share a beat with a hidden tick. Hidden ticks follow the authored
+curve and scroll timing without adding geometry anchors; guide slides generate
+no Combo judgements.
+
 ## Browser preview
 
 `@haneoka/cassiopeia-plugin-sekai/browser` exports `mountSekaiPreview`, `SekaiCanvasRenderer` and their option types. Pass an `EmbedLoaderOptions<SekaiDocument>` data source with an audio resource. The handle exposes play, pause, seek in media seconds, rate, volume, scroll duration and disposal. Chart time is media milliseconds minus `document.bgmOffsetMs`. Trigger audio playback from a user gesture. Dispose the handle when removing its container.

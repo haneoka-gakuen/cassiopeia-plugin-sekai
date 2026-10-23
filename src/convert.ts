@@ -389,6 +389,26 @@ export function convertSekaiSus(sourceSus: string, options: SekaiConvertOptions 
       note.lineIds.push(line.id);
       line.noteIds.push(note.id);
     }
+    if (object.active) {
+      for (let i = 1; i < path.length; i++) {
+        const before = path[i - 1]!;
+        const after = path[i]!;
+        for (let beat = Math.ceil(before.beat * 2) / 2; beat < after.beat; beat += 0.5) {
+          if (beat === path[0]!.beat) continue;
+          const a = visualMap.toScaledTimeMs(toTime(before.beat));
+          const b = visualMap.toScaledTimeMs(toTime(after.beat));
+          const progress = b === a ? 0 : (visualMap.toScaledTimeMs(toTime(beat)) - a) / (b - a);
+          const eased = sekaiEase("ease" in before ? before.ease : "linear", progress);
+          const note = add({
+            beat,
+            lane: before.lane + (after.lane - before.lane) * eased,
+            size: before.size + (after.size - before.size) * eased,
+            type: "hidden",
+          }, "hidden", true, objectIndex);
+          note.lineIds.push(line.id);
+        }
+      }
+    }
     lines.push(line);
   }
   notes.sort((a, b) => a.timeMs - b.timeMs || a.id - b.id);
